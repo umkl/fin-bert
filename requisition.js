@@ -1,4 +1,8 @@
-export default async function createRequisition(accesssToken, endUserId) {
+export default async function createRequisition(
+  accesssToken,
+  endUserId,
+  institutionId
+) {
   const response = await fetch(
     "https://bankaccountdata.gocardless.com/api/v2/requisitions/",
     {
@@ -9,9 +13,9 @@ export default async function createRequisition(accesssToken, endUserId) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        redirect: "https://google.com",
-        institution_id: "N26_NTSBDEB1",
-        reference: "bert frägt 2tes mal",
+        redirect: "https://waterbyte.club",
+        institution_id: institutionId,
+        reference: Math.random().toString(36).substring(2, 15),
         agreement: endUserId,
         user_language: "en",
       }),

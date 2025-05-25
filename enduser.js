@@ -1,4 +1,7 @@
-export default async function createEndUserAgreement(accessToken) {
+export default async function createEndUserAgreement(
+  accessToken,
+  institution_id
+) {
   const response = await fetch(
     "https://bankaccountdata.gocardless.com/api/v2/agreements/enduser/",
     {
@@ -9,7 +12,7 @@ export default async function createEndUserAgreement(accessToken) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        institution_id: "N26_NTSBDEB1",
+        institution_id: institution_id,
       }),
     }
   );

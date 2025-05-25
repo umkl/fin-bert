@@ -54,5 +54,3 @@ export default async function getAccessToken(refreshToken) {
   console.log(data);
   return data.access;
 }
-
-getAccessToken();
