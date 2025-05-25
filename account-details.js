@@ -15,6 +15,5 @@ export default async function getDetails(accessToken, accountId) {
     return;
   }
   const data = await response.json();
-  console.log("Account details data:", data);
   return data;
 }

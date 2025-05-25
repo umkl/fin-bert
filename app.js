@@ -2,6 +2,7 @@
 
 import { exit } from "process";
 import setupPaymentRequisition from "./setup.js";
+import { getReqAccountId, getDetails } from "./setup.js";
 
 async function main() {
   console.log("Finbert Server Interface");
@@ -25,9 +26,23 @@ async function main() {
       console.log("Requisition ID:", id);
       console.log("Requisition Link:", link);
       break;
+    case "accountid":
+      if (args[1] === undefined) {
+        console.log("Please provide a requisition ID for details.");
+        return;
+      }
+      const requisitionId = args[1];
+      const reqAccountId = await getReqAccountId(requisitionId);
+      console.log("Req Account Id:", reqAccountId);
+      break;
     case "details":
-      console.log("Setting up the service...");
-      await setupPaymentRequisition();
+      if (args[1] === undefined) {
+        console.log("Please provide an account ID for details.");
+        return;
+      }
+      const accountId = args[1];
+      const details = await getDetails(accountId);
+      console.log("Account Details:", details);
       break;
     case "start":
       console.log("Starting the service...");
