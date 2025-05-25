@@ -15,7 +15,12 @@ export default async function setupPaymentRequisition() {
     endUserAgreement.id,
     n26.id
   );
-  const accounts = await getAccounts(accessToken, requisition.id);
+  return [requisition.link, requisition.id];
+}
+
+export async function getAccountDetails(requisitionId) {
+  const accessToken = await getAccessToken();
+  const accounts = await getAccounts(accessToken, requisitionId);
   const details = await getDetails(at, accounts.accounts[0]);
-  console.log("Account Details:", JSON.stringify(details, null, 2));
+  return details;
 }

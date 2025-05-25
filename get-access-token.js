@@ -51,6 +51,5 @@ export default async function getAccessToken(refreshToken) {
   }
 
   const data = await response.json();
-  console.log(data);
   return data.access;
 }

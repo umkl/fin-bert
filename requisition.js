@@ -28,6 +28,5 @@ export default async function createRequisition(
   }
 
   const data = await response.json();
-  console.log("Requisition created:", data);
   return data;
 }

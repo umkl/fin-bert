@@ -17,6 +17,5 @@ export default async function getInstitutions(accessToken) {
   }
 
   const data = await response.json();
-  console.log("Institutions data:", data);
   return data;
 }
