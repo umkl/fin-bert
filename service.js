@@ -1,4 +1,6 @@
-const interval = 2 * 1000;
+const min15 = 15 * 60 * 1000;
+const sec2 = 2 * 1000;
+const interval = min15;
 
 export default async function startFinService() {
   startExecutionLoop();
