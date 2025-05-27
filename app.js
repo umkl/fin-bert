@@ -3,6 +3,7 @@
 import { exit } from "process";
 import setupPaymentRequisition from "./setup.js";
 import { getReqAccountId, getDetails } from "./setup.js";
+import startFinService from "./service.js";
 
 async function main() {
   console.log("Finbert Server Interface");
@@ -52,7 +53,6 @@ async function main() {
       console.log("Invalid option. Please use 'setup' or 'start'.");
       return;
   }
-  exit(1);
 }
 
 main().catch((error) => {
