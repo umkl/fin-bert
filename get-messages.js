@@ -6,8 +6,9 @@ dotenv.config();
 const channeldId = process.env.DISCORD_CHANNEL_ID;
 
 export async function sendMessage(channelId, message) {
-  const appId = process.env.APP_ID;
-  const globalEndpoint = `channels/${channeldId}/messages`;
+  const appId = process.env.DISCORD_APP_ID;
+  const limit = 100;
+  const globalEndpoint = `channels/${channeldId}/messages?limit=${limit}`;
   const messageBody = {
     content: message || "Hello, world!",
     channel_id: channeldId,
@@ -16,8 +17,7 @@ export async function sendMessage(channelId, message) {
 
   try {
     const res = await DiscordRequest(globalEndpoint, {
-      method: "POST",
-      body: messageBody,
+      method: "GET",
     });
 
     console.log(await res.json());
