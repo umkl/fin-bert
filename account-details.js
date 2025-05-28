@@ -11,8 +11,8 @@ export default async function getDetails(accessToken, accountId) {
     }
   );
   if (!response.ok) {
-    console.log("Failed to fetch account details:", await response.text());
-    throw new Error(response.text());
+    console.log("Failed to fetch account details:", "zipfe");
+    throw new Error("zipfe");
   }
   const data = await response.json();
   return data;

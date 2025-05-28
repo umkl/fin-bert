@@ -41,7 +41,7 @@ export const checkForTransactionsAndLogRespectfullyInDiscord = async () => {
     try {
       details = await getTheCashlessDataAndExecute();
     } catch (e) {
-      console.log("not possible: " + getRandomEmoji(), e);
+      console.log("not possible: " + getRandomEmoji());
       return;
     }
 
