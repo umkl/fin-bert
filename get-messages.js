@@ -5,7 +5,7 @@ dotenv.config();
 
 const channeldId = process.env.DISCORD_CHANNEL_ID;
 
-export async function sendMessage(channelId, message) {
+export async function getMessages(channelId, message) {
   const appId = process.env.DISCORD_APP_ID;
   const limit = 100;
   const globalEndpoint = `channels/${channeldId}/messages?limit=${limit}`;
@@ -20,10 +20,10 @@ export async function sendMessage(channelId, message) {
       method: "GET",
     });
 
-    console.log(await res.json());
+    return res.json();
   } catch (err) {
     console.error("Error installing commands: ", err);
   }
 }
 
-sendMessage(channeldId);
+getMessages(channeldId);
