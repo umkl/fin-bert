@@ -5,15 +5,10 @@ dotenv.config();
 
 const channeldId = process.env.DISCORD_CHANNEL_ID;
 
-export async function getMessages(channelId, message) {
+export async function getMessages(channelId) {
   const appId = process.env.DISCORD_APP_ID;
   const limit = 100;
   const globalEndpoint = `channels/${channeldId}/messages?limit=${limit}`;
-  const messageBody = {
-    content: message || "Hello, world!",
-    channel_id: channeldId,
-    tts: false,
-  };
 
   try {
     const res = await DiscordRequest(globalEndpoint, {

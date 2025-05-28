@@ -1,23 +1,18 @@
-const min15 = 15 * 60 * 1000;
-const sec2 = 2 * 1000;
-const interval = min15;
-
 import { getMessages } from "./get-messages.js";
 import getDetails from "./account-details.js";
 import getAccessToken from "./get-access-token.js";
+import { sendMessage } from "./send-message.js";
+import { scheduleFunction } from "./scheduler.js";
 
 export default async function startFinService() {
   startExecutionLoop();
 }
 
 const startExecutionLoop = () => {
-  myFunction();
-
-  setInterval(myFunction, interval);
-  console.log(
-    `Scheduled function to run every ${interval / (60 * 1000)} minutes.`
-  );
+  scheduleFunction(myFunction, true);
 };
+
+const alreadyLoggedItemIds = [];
 
 const myFunction = async () => {
   const now = new Date();
@@ -32,14 +27,11 @@ const myFunction = async () => {
 
   const differenceInMilliseconds = now - lastMessageDate;
 
-  // if(lastMessage - now){
-  // }
-
   const durationAsDate = new Date(differenceInMilliseconds);
 
   const differenceInMinutes = differenceInMilliseconds / (1000 * 60);
 
-  if (differenceInMinutes > 15) {
+  if (differenceInMinutes > 0) {
     const itemsToLog = [];
 
     const accessToken = await getAccessToken();
@@ -48,10 +40,19 @@ const myFunction = async () => {
 
     const completedBookings = details.transactions.booked;
 
-    console.log(completedBookings);
+    const messages = getMessages();
+    for (const message of messages) {
+      if (!alreadyLoggedItemIds.includes(message.content)) {
+        alreadyLoggedItemIds.push(message.content);
+      }
+    }
 
     for (const item of completedBookings) {
-      console.log(item);
+      console.log(!alreadyLoggedItemIds.includes(item));
+      if (!alreadyLoggedItemIds.includes(item)) {
+        sendMessage(item.transactionId, channeldId);
+        alreadyLoggedItemIds.push(item.transactionId);
+      }
     }
   }
 };

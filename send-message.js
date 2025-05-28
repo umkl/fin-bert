@@ -5,7 +5,7 @@ dotenv.config();
 
 const channeldId = process.env.DISCORD_CHANNEL_ID;
 
-export async function sendMessage(channelId, message) {
+export async function sendMessage(message, channelId) {
   const appId = process.env.APP_ID;
   const globalEndpoint = `channels/${channeldId}/messages`;
   const messageBody = {
@@ -25,5 +25,3 @@ export async function sendMessage(channelId, message) {
     console.error("Error installing commands: ", err);
   }
 }
-
-sendMessage(channeldId);
