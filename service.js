@@ -10,12 +10,12 @@ export default async function startFinService() {
 }
 
 const startExecutionLoop = () => {
-  scheduleFunction(myFunction, true);
+  scheduleFunction(checkForTransactionsAndLogRespectfullyInDiscord, true);
 };
 
 const alreadyLoggedItemIds = [];
 
-const myFunction = async () => {
+export const checkForTransactionsAndLogRespectfullyInDiscord = async () => {
   const now = new Date();
   console.log(`Function executed at: ${now.toISOString()}`);
 
@@ -37,17 +37,24 @@ const myFunction = async () => {
 
     await seedMessages();
 
-    // await getTheCashlessDataAndExecute((details) => {
-    //   const completedBookings = details.transactions.booked;
-    //   for (const item of completedBookings) {
-    //   console.log(!alreadyLoggedItemIds.includes(item));
-    //   if (!alreadyLoggedItemIds.includes(item)) {
-    //     sendMessage(item.transactionId, channeldId);
-    //     alreadyLoggedItemIds.push(item.transactionId);
-    //   }
-    // }
-    // });
-    const result = getRandomEmoji();
+    let details;
+    try {
+      details = await getTheCashlessDataAndExecute();
+    } catch (e) {
+      console.log("not possible: " + getRandomEmoji(), e);
+      return;
+    }
+
+    const completedBookings = details.transactions.booked;
+    for (const item of completedBookings) {
+      console.log(!alreadyLoggedItemIds.includes(item));
+      if (!alreadyLoggedItemIds.includes(item)) {
+        sendMessage(item.transactionId, channeldId);
+        alreadyLoggedItemIds.push(item.transactionId);
+      }
+    }
+
+    // const result = getRandomEmoji();
     sendMessageButRespectThePast(result);
   }
 };
@@ -73,9 +80,9 @@ async function seedMessages() {
   }
 }
 
-async function getTheCashlessDataAndExecute(callback) {
+async function getTheCashlessDataAndExecute() {
   const accessToken = await getAccessToken();
   const accountId = process.env.GCLESS_ACCOUNT_ID;
   const details = await getDetails(accessToken, accountId);
-  callback(details);
+  return details;
 }
