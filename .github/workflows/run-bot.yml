@@ -25,3 +25,13 @@ jobs:
 
       - name: Run bot
         run: npm run start
+        env:
+          GCLESS_SECRET_ID: ${{ secrets.GCLESS_SECRET_ID }}
+          GCLESS_SECRET_KEY: ${{ secrets.GCLESS_SECRET_KEY }}
+          GCLESS_N26_RESOURCEID: ${{ secrets.GCLESS_N26_RESOURCEID }}
+          GCLESS_COMPANY_ID: ${{ secrets.GCLESS_COMPANY_ID }}
+          GCLESS_ACCOUNT_ID: ${{ secrets.GCLESS_ACCOUNT_ID }}
+          DISCORD_APP_ID: ${{ secrets.DISCORD_APP_ID }}
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+          DISCORD_PUBLIC_KEY: ${{ secrets.DISCORD_PUBLIC_KEY }}
+          DISCORD_CHANNEL_ID: ${{ secrets.DISCORD_CHANNEL_ID }}
