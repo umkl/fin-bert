@@ -53,9 +53,6 @@ export const checkForTransactionsAndLogRespectfullyInDiscord = async () => {
         alreadyLoggedItemIds.push(item.transactionId);
       }
     }
-
-    // const result = getRandomEmoji();
-    sendMessageButRespectThePast(result);
   }
 };
 
