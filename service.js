@@ -64,6 +64,13 @@ export const checkForTransactionsAndLogRespectfullyInDiscord = async () => {
         ${JSON.stringify(item, null, 2)}
         \`\`\``;
         sendMessage(message, channeldId);
+        // TODO: UPDATE THIS!:
+        createTransaction({
+          transactionName: "Spotify Subscription",
+          transactionId: item.transactionId,
+          value: 100,
+          type: "Expense",
+        });
       }
       if (!alreadyLoggedItemIds.includes(item)) {
         sendMessage(item.transactionId, channeldId);
