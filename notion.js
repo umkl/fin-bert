@@ -167,16 +167,3 @@ export async function updateTransactionDatabase(databaseId) {
     console.error("❌ Failed to update database:", error.message);
   }
 }
-
-(async function () {
-  const items = await listNotionItems();
-  console.log(items);
-
-  // await updateTransactionDatabase(databaseId);
-  // createTransaction({
-  //   transactionName: "Spotify Subscription",
-  //   transactionId: "txn_12345",
-  //   value: 9.99,
-  //   type: "Expense",
-  // });
-})();
