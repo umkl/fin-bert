@@ -3,9 +3,8 @@ name: Run Discord Bot
 on:
   schedule:
     - cron: "00 09 * * *"
-    - cron: "00 11 * * *"
-    - cron: "15 14 * * *"
-    - cron: "50 18 * * *"
+    - cron: "00 13 * * *"
+    - cron: "00 17 * * *"
 
   workflow_dispatch: # lets you run it manually from the GitHub UI too
 
