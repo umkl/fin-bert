@@ -4,6 +4,7 @@ import getAccessToken from "./get-access-token.js";
 import { sendMessage } from "./send-message.js";
 import { scheduleFunction } from "./scheduler.js";
 import { getRandomEmoji } from "./discord-utils.js";
+import { listNotionItems } from "./notion.js";
 
 export default async function startFinService() {
   startExecutionLoop();
@@ -46,8 +47,24 @@ export const checkForTransactionsAndLogRespectfullyInDiscord = async () => {
     }
 
     const completedBookings = details.transactions.booked;
+
+    const alreadyLoggedIdsFromNotion = await listNotionItems();
+
     for (const item of completedBookings) {
       console.log(!alreadyLoggedItemIds.includes(item));
+
+      if (
+        alreadyLoggedIdsFromNotion
+          .map((notionItem) => {
+            return notionItem.transactionId;
+          })
+          .includes(item.transactionId)
+      ) {
+        const message = `\`\`\`json
+        ${JSON.stringify(item, null, 2)}
+        \`\`\``;
+        sendMessage(message, channeldId);
+      }
       if (!alreadyLoggedItemIds.includes(item)) {
         sendMessage(item.transactionId, channeldId);
         alreadyLoggedItemIds.push(item.transactionId);
