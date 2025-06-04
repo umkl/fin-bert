@@ -5,6 +5,7 @@ import { sendMessage } from "./send-message.js";
 import { scheduleFunction } from "./scheduler.js";
 import { getRandomEmoji } from "./discord-utils.js";
 import { listNotionItems } from "./notion.js";
+import { createTransaction } from "./notion.js";
 
 export default async function startFinService() {
   startExecutionLoop();
@@ -48,33 +49,29 @@ export const checkForTransactionsAndLogRespectfullyInDiscord = async () => {
 
     const completedBookings = details.transactions.booked;
 
+    console.log(completedBookings);
+
     const alreadyLoggedIdsFromNotion = await listNotionItems();
 
-    for (const item of completedBookings) {
-      console.log(!alreadyLoggedItemIds.includes(item));
+    const alreadyLoggedIds = alreadyLoggedIdsFromNotion.map((notionItem) => {
+      return notionItem.transactionId;
+    });
 
-      if (
-        alreadyLoggedIdsFromNotion
-          .map((notionItem) => {
-            return notionItem.transactionId;
-          })
-          .includes(item.transactionId)
-      ) {
+    for (const completedBooking of completedBookings) {
+      if (!alreadyLoggedIds.includes(completedBooking.transactionId)) {
         const message = `\`\`\`json
-        ${JSON.stringify(item, null, 2)}
+
+        ${JSON.stringify(completedBooking, null, 2)}
+        
         \`\`\``;
-        sendMessage(message, channeldId);
-        // TODO: UPDATE THIS!:
-        createTransaction({
+        await sendMessage(message, channeldId);
+        await createTransaction({
           transactionName: "Spotify Subscription",
-          transactionId: item.transactionId,
+          transactionId: completedBooking.transactionId,
           value: 100,
           type: "Expense",
         });
-      }
-      if (!alreadyLoggedItemIds.includes(item)) {
-        sendMessage(item.transactionId, channeldId);
-        alreadyLoggedItemIds.push(item.transactionId);
+        alreadyLoggedItemIds.push(completedBooking.transactionId);
       }
     }
   }
@@ -102,6 +99,21 @@ async function seedMessages() {
 }
 
 async function getTheCashlessDataAndExecute() {
+  if (process.env.MODE == "DEV") {
+    console.log("i figured");
+    return {
+      transactions: {
+        booked: [
+          {
+            transactionId: "123321",
+          },
+          {
+            transactionId: "sadfasdf21221",
+          },
+        ],
+      },
+    };
+  }
   const accessToken = await getAccessToken();
   const accountId = process.env.GCLESS_ACCOUNT_ID;
   const details = await getDetails(accessToken, accountId);
