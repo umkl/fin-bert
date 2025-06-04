@@ -1,11 +1,11 @@
 import { getMessages } from "./get-messages.js";
 import getDetails from "./account-details.js";
 import getAccessToken from "./get-access-token.js";
-import { sendMessage } from "./send-message.js";
+import { sendMessage as sendDiscordMessage } from "./send-message.js";
 import { scheduleFunction } from "./scheduler.js";
 import { getRandomEmoji } from "./discord-utils.js";
 import { listNotionItems } from "./notion.js";
-import { createTransaction } from "./notion.js";
+import { createTransaction as insertNotionEntry } from "./notion.js";
 
 export default async function startFinService() {
   startExecutionLoop();
@@ -43,20 +43,15 @@ export const checkForTransactionsAndLogRespectfullyInDiscord = async () => {
     try {
       details = await getTheCashlessDataAndExecute();
     } catch (e) {
-      console.log("not possible: " + getRandomEmoji());
+      console.log("probably hit api limit lol: " + getRandomEmoji());
       return;
     }
 
     const completedBookings = details.transactions.booked;
-
-    console.log(completedBookings);
-
     const alreadyLoggedIdsFromNotion = await listNotionItems();
-
     const alreadyLoggedIds = alreadyLoggedIdsFromNotion.map((notionItem) => {
       return notionItem.transactionId;
     });
-
     for (const completedBooking of completedBookings) {
       if (!alreadyLoggedIds.includes(completedBooking.transactionId)) {
         const message = `\`\`\`json
@@ -64,8 +59,8 @@ export const checkForTransactionsAndLogRespectfullyInDiscord = async () => {
         ${JSON.stringify(completedBooking, null, 2)}
         
         \`\`\``;
-        await sendMessage(message, channeldId);
-        await createTransaction({
+        await sendDiscordMessage(message, channeldId);
+        await insertNotionEntry({
           transactionName: "Spotify Subscription",
           transactionId: completedBooking.transactionId,
           value: 100,
@@ -80,7 +75,7 @@ export const checkForTransactionsAndLogRespectfullyInDiscord = async () => {
 function sendMessageButRespectThePast(message) {
   const channeldId = process.env.DISCORD_CHANNEL_ID;
   if (!alreadyLoggedItemIds.includes(message)) {
-    sendMessage(message, channeldId);
+    sendDiscordMessage(message, channeldId);
   }
 }
 
@@ -100,15 +95,11 @@ async function seedMessages() {
 
 async function getTheCashlessDataAndExecute() {
   if (process.env.MODE == "DEV") {
-    console.log("i figured");
     return {
       transactions: {
         booked: [
           {
-            transactionId: "123321",
-          },
-          {
-            transactionId: "sadfasdf21221",
+            transactionId: "TESTID",
           },
         ],
       },
